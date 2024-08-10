@@ -1,9 +1,22 @@
-# mIAuthd
- The midiandmore IAuthd<br>
- This is an early release of the IAuthd for snircd, it works.<br>
- To compile it, use NetBeans.<br>
- Then upload it to the server (Don't forget the libs)<br>
- Then just modify the ircd.conf and add or modify:<br>
- IAuth {<br>
-   program = "java" "-jar" "path to mIAuthd.jar" "path to config.json";<br>
- };<br>
+# mIAuthd from Andreas Pschorn<br>
+First download following file, and copy it to the server: https://github.com/user-attachments/files/16569707/mIAuthd.zip <br>
+Modify the config.json.<br>
+[snircd](https://github.com/quakenet/snircd) needs for [qwebirc](https://github.com/qwebirc/qwebirc) the iauth-fix-webirc.patch and the configure.patch file,<br>
+Go to the snircd sources directory, and enter<br>
+"wget https://raw.githubusercontent.com/WarPigs1602/snircd-patches/main/iauth-fix-webirc.patch",<br>
+then enter "git apply iauth-fix-webirc.patch" to fix the server with an IAuth bug and add the webchat feature,<br>
+then enter "wget https://raw.githubusercontent.com/WarPigs1602/snircd-patches/main/configure.patch",
+then enter "git apply configure.patch" to fix the MAXCONNECTIONS issue.
+After that then enter "./configure", then "make" and "make install",<br>
+and the ircd will now working with the Patch.<br>
+Further configuration in the "ircd.conf" is needed or modified to:<br>
+<br>
+IAuth {<br>
+ program = "java" "-jar" "path to mIAuthd.jar" "path to config.json";<br>
+};<br>
+<br>
+And set in the features section:<br>
+<br>
+"HIS_STATS_IAUTH" = "TRUE";<br>
+<br>
+Have fun for the using of this program :)
