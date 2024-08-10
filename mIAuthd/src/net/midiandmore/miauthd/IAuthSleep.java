@@ -26,16 +26,19 @@ public class IAuthSleep implements Runnable, Info {
     public void run() {
         while (true) {
             try {
-                if (getMi().getSocketThread() == null) { 
-                    getMi().setSocketThread(new SocketThread(getMi()));
-                } else if (getMi().getSocketThread().getSocket() == null) {
-                    getMi().getSocketThread().setRuns(false); 
-                    getMi().setSocketThread(null);
+                var trust = getMi().getConfig().getConfigFile().get("TRUST_ENABLED").equals("true");
+                if (trust) {
+                    if (getMi().getSocketThread() == null) {
+                        getMi().setSocketThread(new SocketThread(getMi()));
+                    } else if (getMi().getSocketThread().getSocket() == null) {
+                        getMi().getSocketThread().setRuns(false);
+                        getMi().setSocketThread(null);
+                    } else if (getMi().getSocketThread().isRuns()
+                            && getMi().getSocketThread().getSocket().isClosed()) {
+                        getMi().getSocketThread().setRuns(false);
+                        getMi().setSocketThread(null);
+                    }
                 }
-                else if (getMi().getSocketThread().isRuns() && getMi().getSocketThread().getSocket().isClosed()) {
-                    getMi().getSocketThread().setRuns(false); 
-                    getMi().setSocketThread(null);
-                } 
                 getMi().getIauthd().addStats("Version: %s", VERSION);
                 getMi().getIauthd().addStats("Started: %s seconds ago", (System.currentTimeMillis() / 1000) - getMi().getStartTime());
                 if (getMi().getHandler().getConnected() != -1 && getMi().getHandler().isAuthed()) {

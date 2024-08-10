@@ -130,7 +130,9 @@ public class IAuthd {
             } else if (command.equals("H")) {
                 // hurry state (ircd has finished DNS
                 // ident check
-                if (getMi().getSocketThread().getSocket() != null && getMi().getHandler().isAuthed()) {
+                var trust = getMi().getConfig().getConfigFile().get("TRUST_ENABLED").equals("true");
+                if (trust && getMi().getSocketThread() != null && getMi().getSocketThread().getSocket() != null 
+                        && getMi().getHandler().isAuthed()) {
                     getMi().getHandler().sendText("CHECK %s-%s %s %s",
                             id, getMi().getUser().get(id).getUniqueId(), getMi().getUser().get(id).getUsername(),
                             getMi().getUser().get(id).getRemoteip());
