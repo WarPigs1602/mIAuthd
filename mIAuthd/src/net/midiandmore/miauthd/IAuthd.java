@@ -100,6 +100,8 @@ public class IAuthd {
                 return;
             }
             var id = tokens[0];
+            if (id.equals("-1"))
+                return;
             var command = tokens[1];
             var params = tokens[2].split(" ", 4);
             if (command.equals("W")) {
