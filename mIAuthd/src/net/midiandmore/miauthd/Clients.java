@@ -20,10 +20,12 @@ public class Clients {
     private String remoteip;
     private String remoteport;
     private String uniqueId;
+    private boolean webirc;
                     
     public Clients(MIAuthd mi, String id) {
         setMi(mi);
         setId(id);
+        setWebirc(false);
     }
 
     /**
@@ -150,5 +152,19 @@ public class Clients {
      */
     public void setUniqueId(String uniqueId) {
         this.uniqueId = uniqueId;
+    }
+
+    /**
+     * @return the webirc
+     */
+    public boolean isWebirc() {
+        return webirc;
+    }
+
+    /**
+     * @param webirc the webirc to set
+     */
+    public void setWebirc(boolean webirc) {
+        this.webirc = webirc;
     }
 }

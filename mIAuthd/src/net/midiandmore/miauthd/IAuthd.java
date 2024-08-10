@@ -87,13 +87,12 @@ public class IAuthd {
     protected void parseLine(String line) {
         try {
             String[] tokens;
-
             if (line.isEmpty()) {
                 return;
             }
             if (line.contains(" :")) {
-                String[] trailing = line.split(" :");
-                tokens = trailing[1].split(" ", 3);
+                String[] trailing = line.split(" \\:", 2);
+                tokens = trailing[0].split(" ", 3);
             } else {
                 tokens = line.split(" ", 3);
             }
@@ -116,6 +115,7 @@ public class IAuthd {
                         && getMi().getUser().get(id).getUsername().equals(getMi().getConfig().getConfigFile().get("WEBIRC_USERNAME"))) {
                     sendText("N %s %s %s %s", id, getMi().getUser().get(id).getRemoteip(),
                             getMi().getUser().get(id).getRemoteport(), getMi().getUser().get(id).getHostname());
+                    getMi().getUser().get(id).setWebirc(true);
                 }
             } else if (command.equals("C")) {//new client
                 if (params.length < 2) // too few parameters
@@ -141,7 +141,12 @@ public class IAuthd {
                 }
             } else if (command.equalsIgnoreCase("u")) {  // trusted/untrusted username
                 var username = params[0];
-
+                var webirc = getMi().getUser().get(id).isWebirc();
+                if (webirc) {
+                    getMi().getUser().get(id).setUsername(username.startsWith("~") ? username.substring(1) : username);
+                    sendText("U %s %s %s %s", id, getMi().getUser().get(id).getRemoteip(), getMi().getUser().get(id).getRemoteport(), getMi().getUser().get(id).getUsername());
+                    return;
+                }
                 // untrusted username (i.e.non - working identd
                 if (command.equals("U")) {
                     username = '~' + username;
