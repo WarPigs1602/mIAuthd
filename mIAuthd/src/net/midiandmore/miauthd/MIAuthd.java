@@ -22,6 +22,8 @@ public class MIAuthd {
     private IAuthd iauthd;
     private IAuthdThread thread;
     private IAuthSleep sleep;
+    private SocketThread socketThread;
+    private TrustHandler handler;
     private long lastTime;
     private long startTime;
     private HashMap<String, Clients> user;
@@ -55,6 +57,7 @@ public class MIAuthd {
             configFile = args[0];
         }
         setConfig(new Config(this, configFile));
+        setHandler(new TrustHandler(this));
         setIauthd(new IAuthd(this));
         setThread(new IAuthdThread(this));
         setSleep(new IAuthSleep(this));
@@ -156,5 +159,33 @@ public class MIAuthd {
      */
     public void setUser(HashMap user) {
         this.user = user;
+    }
+
+    /**
+     * @return the handler
+     */
+    public TrustHandler getHandler() {
+        return handler;
+    }
+
+    /**
+     * @param handler the handler to set
+     */
+    public void setHandler(TrustHandler handler) {
+        this.handler = handler;
+    }
+
+    /**
+     * @return the socketThread
+     */
+    public SocketThread getSocketThread() {
+        return socketThread;
+    }
+
+    /**
+     * @param socketThread the socketThread to set
+     */
+    public void setSocketThread(SocketThread socketThread) {
+        this.socketThread = socketThread;
     }
 }

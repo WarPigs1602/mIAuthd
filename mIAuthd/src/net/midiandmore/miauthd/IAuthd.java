@@ -59,6 +59,9 @@ public class IAuthd {
         sendText("> :iauthd: %s", message.formatted(args));
     }
 
+    protected void handleClose() {
+        System.exit(0);
+    }
     /**
      * Clears stas
      */
@@ -127,7 +130,13 @@ public class IAuthd {
             } else if (command.equals("H")) {
                 // hurry state (ircd has finished DNS
                 // ident check
-                sendVerdict("%s-%s".formatted(id,getMi().getUser().get(id).getUniqueId()), "PASS", "moo");
+                if (getMi().getSocketThread().getSocket() != null && getMi().getHandler().isAuthed()) {
+                    getMi().getHandler().sendText("CHECK %s-%s %s %s",
+                            id, getMi().getUser().get(id).getUniqueId(), getMi().getUser().get(id).getUsername(),
+                            getMi().getUser().get(id).getRemoteip());
+                } else {
+                    sendVerdict("%s-%s".formatted(id, getMi().getUser().get(id).getUniqueId()), "PASS", "moo");
+                }
             } else if (command.equalsIgnoreCase("u")) {  // trusted/untrusted username
                 var username = params[0];
 
@@ -148,13 +157,13 @@ public class IAuthd {
         }
     }
 
-    private void sendVerdict(String combinedId, String verdict, String message) {
+    protected void sendVerdict(String combinedId, String verdict, String message) {
         var tokens = combinedId.split("-", 2);
         if (tokens.length < 2) {
             return;
         }
         var id = tokens[0];
-        var unique= tokens[1];
+        var unique = tokens[1];
         if (!getMi().getUser().containsKey(id) || !getMi().getUser().get(id).getUniqueId().equals(unique)) {
             return;
         }
@@ -188,8 +197,8 @@ public class IAuthd {
             sendText("k %s %s %s :%s",
                     id, getMi().getUser().get(id).getRemoteip(), getMi().getUser().get(id).getRemoteport(), message);
             setStatsKilled(getStatsKilled() + 1);
+            getMi().getUser().remove(id);
         }
-        getMi().getUser().remove(id);
     }
 
     /**

@@ -9,14 +9,14 @@ import java.util.logging.Logger;
 
 /**
  * Starts a new Thread
- * 
+ *
  * @author Andreas Pschorn
  */
 public class IAuthSleep implements Runnable, Info {
 
     private Thread thread;
     private MIAuthd mi;
-    
+
     public IAuthSleep(MIAuthd mi) {
         setMi(mi);
         (thread = new Thread(this)).start();
@@ -26,8 +26,28 @@ public class IAuthSleep implements Runnable, Info {
     public void run() {
         while (true) {
             try {
+                if (getMi().getSocketThread() == null) { 
+                    getMi().setSocketThread(new SocketThread(getMi()));
+                } else if (getMi().getSocketThread().getSocket() == null) {
+                    getMi().getSocketThread().setRuns(false); 
+                    getMi().setSocketThread(null);
+                }
+                else if (getMi().getSocketThread().isRuns() && getMi().getSocketThread().getSocket().isClosed()) {
+                    getMi().getSocketThread().setRuns(false); 
+                    getMi().setSocketThread(null);
+                } 
                 getMi().getIauthd().addStats("Version: %s", VERSION);
                 getMi().getIauthd().addStats("Started: %s seconds ago", (System.currentTimeMillis() / 1000) - getMi().getStartTime());
+                if (getMi().getHandler().getConnected() != -1 && getMi().getHandler().isAuthed()) {
+                    getMi().getIauthd().addStats("Connected to trusts backend for %s seconds.",
+                            (System.currentTimeMillis() / 1000) - getMi().getHandler().getConnected());
+                } else {
+                    getMi().getIauthd().addStats("Not connected to trusts backend.");
+                }
+                getMi().getIauthd().addStats("Accepted connections: %d", getMi().getIauthd().getStatsPasssed());
+                getMi().getIauthd().addStats("Rejected connections: %d", getMi().getIauthd().getStatsKilled());
+                getMi().getIauthd().addStats("Unthrottled connections: %d", getMi().getIauthd().getStatsUnthrottled());
+                getMi().getIauthd().addStats("Pending connections: %d", getMi().getUser().size());
                 thread.sleep(15000);
                 getMi().getIauthd().clearStats();
             } catch (InterruptedException ex) {
@@ -51,4 +71,3 @@ public class IAuthSleep implements Runnable, Info {
         this.mi = mi;
     }
 }
-
