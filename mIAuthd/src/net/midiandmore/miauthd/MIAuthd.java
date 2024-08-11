@@ -24,6 +24,7 @@ public class MIAuthd {
     private IAuthSleep sleep;
     private SocketThread socketThread;
     private TrustHandler handler;
+    private Cloak cloak;
     private long lastTime;
     private long startTime;
     private HashMap<String, Clients> user;
@@ -57,6 +58,7 @@ public class MIAuthd {
             configFile = args[0];
         }
         setConfig(new Config(this, configFile));
+        setCloak(new Cloak(this));
         setHandler(new TrustHandler(this));
         setIauthd(new IAuthd(this));
         setThread(new IAuthdThread(this));
@@ -187,5 +189,19 @@ public class MIAuthd {
      */
     public void setSocketThread(SocketThread socketThread) {
         this.socketThread = socketThread;
+    }
+
+    /**
+     * @return the cloak
+     */
+    public Cloak getCloak() {
+        return cloak;
+    }
+
+    /**
+     * @param cloak the cloak to set
+     */
+    public void setCloak(Cloak cloak) {
+        this.cloak = cloak;
     }
 }

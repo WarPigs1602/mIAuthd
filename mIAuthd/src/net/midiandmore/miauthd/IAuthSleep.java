@@ -51,8 +51,14 @@ public class IAuthSleep implements Runnable, Info {
                 getMi().getIauthd().addStats("Rejected connections: %d", getMi().getIauthd().getStatsKilled());
                 getMi().getIauthd().addStats("Unthrottled connections: %d", getMi().getIauthd().getStatsUnthrottled());
                 getMi().getIauthd().addStats("Pending connections: %d", getMi().getUser().size());
+                System.gc();
+                var rt = Runtime.getRuntime();
+                getMi().getIauthd().addStats("Memory usage: %d KB", ((rt.totalMemory() - rt.freeMemory()) / 1024));
+                getMi().getIauthd().addConfig("Connected webirc to: %s", getMi().getConfig().getConfigFile().get("WEBIRC_HOST"));
+                getMi().getIauthd().addConfig("Trust enabled: %s", getMi().getConfig().getConfigFile().get("TRUST_ENABLED"));
                 thread.sleep(15000);
                 getMi().getIauthd().clearStats();
+                getMi().getIauthd().clearConfig();
             } catch (InterruptedException ex) {
                 Logger.getLogger(IAuthSleep.class.getName()).log(Level.SEVERE, null, ex);
                 System.exit(1);

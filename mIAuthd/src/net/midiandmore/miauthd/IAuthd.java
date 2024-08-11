@@ -62,8 +62,9 @@ public class IAuthd {
     protected void handleClose() {
         System.exit(0);
     }
+
     /**
-     * Clears stas
+     * Clears stats
      */
     protected void clearStats() {
         sendText("s");
@@ -78,6 +79,23 @@ public class IAuthd {
     protected void addStats(String message, Object... args) {
         sendText("S midiandmore-iauthd :%s", message.formatted(args));
     }
+
+    /**
+     * Clears configs
+     */
+    protected void clearConfig() {
+        sendText("a");
+    }
+    
+    /**
+     * Adds a configuration message
+     *
+     * @param message The message
+     * @param args The args like %d %s
+     */
+    protected void addConfig(String message, Object... args) {
+        sendText("A * midiandmore-iauthd :%s", message.formatted(args));
+    }    
 
     /**
      * Parses the incoming line
@@ -111,7 +129,9 @@ public class IAuthd {
                 }
                 getMi().getUser().get(id).setPassword(params[0]);
                 getMi().getUser().get(id).setUsername(params[1]);
-                getMi().getUser().get(id).setHostname(params[2]);
+                var cloak = getMi().getConfig().getConfigFile().getOrDefault("CLOAK", "false").equals("true") ? 
+                        getMi().getCloak().parseCloak(params[2]) : params[2];
+                getMi().getUser().get(id).setHostname(cloak);
                 getMi().getUser().get(id).setIp(params[3]);
                 if (getMi().getUser().get(id).getPassword().equals(getMi().getConfig().getConfigFile().get("WEBIRC_PASS"))
                         && getMi().getUser().get(id).getUsername().equals(getMi().getConfig().getConfigFile().get("WEBIRC_USERNAME"))) {
