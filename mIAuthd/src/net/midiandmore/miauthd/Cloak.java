@@ -50,26 +50,28 @@ public class Cloak {
                 if (add.contains(".")) {
                     var tokens = host.split("\\.");
                     var i = 1;
-                    var ip = "";
                     var buf = new StringBuilder();
                     for (var elem : tokens) {
                         if (elem.contains("-")) {
                             var parts = elem.split("-");
                             for (var part : parts) {
                                 if (part.matches("\\d*")) {
-                                    buf.append(Integer.toHexString(Integer.valueOf(part)));
+                                    buf.append(Integer.toHexString(Integer.parseInt(part)));
+                                } else if (part.matches("[\\da-fA-F]")) {
+                                    buf.append(part);
                                 }
                             }
                         } else if (elem.matches("\\d*")) {
-                            buf.append(Integer.toHexString(Integer.valueOf(elem)));
+                            buf.append(Integer.toHexString(Integer.parseInt(elem)));
+                        } else if (elem.matches("[\\da-fA-F]")) {
+                            buf.append(elem);
                         }
                     }
                     for (var elem : tokens) {
                         var hex = buf.toString();
-                        hex = hex.substring(hex.length() / 2);
                         if (elem.contains(hex)) {
                             sb.append("cloak-");
-                            sb.append(parse(hex));
+                            sb.append(parseHex(hex));
                             sb.append(".");
                         } else if (elem.contains("-")) {
                             var parts = elem.split("-");
@@ -77,6 +79,8 @@ public class Cloak {
                             for (var part : parts) {
                                 if (part.matches("\\d*")) {
                                     sb.append(parse(part));
+                                } else if (part.contains("dynamic")) {
+                                    sb.append("cloak-");
                                 } else if (part.contains("ip")) {
                                     sb.append("cloak-");
                                 } else {
@@ -90,6 +94,8 @@ public class Cloak {
                             sb.append(".");
                         } else if (elem.matches("\\d*")) {
                             sb.append(parse(elem));
+                        } else if (elem.contains("dynamic")) {
+                            sb.append("cloak-");
                         } else if (elem.contains("ip")) {
                             sb.append("cloak-");
                         } else {
@@ -104,6 +110,20 @@ public class Cloak {
             }
         } catch (UnknownHostException ex) {
             Logger.getLogger(Cloak.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return sb.toString();
+    }
+
+    private String parseHex(String text) {
+        var buf = DigestUtils.md5Hex(text).toCharArray();
+        var sb = new StringBuilder();
+        int i = 0;
+        for (var chr : buf) {
+            sb.append(chr);
+            if (i >= 7) {
+                break;
+            }
+            i++;
         }
         return sb.toString();
     }
