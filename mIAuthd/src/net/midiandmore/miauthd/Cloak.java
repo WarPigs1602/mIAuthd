@@ -29,6 +29,7 @@ public class Cloak {
 
     protected String parseCloak(String host) {
         var sb = new StringBuilder();
+        var buf = new StringBuilder();
         try {
             var add = InetAddress.getByName(host).getHostAddress();
             if (add.equals(host)) {
@@ -47,42 +48,39 @@ public class Cloak {
                 }
                 sb.append("ip");
             } else {
+                String[] tokens;
                 if (add.contains(".")) {
-                    var tokens = host.split("\\.");
-                    var i = 1;
-                    var buf = new StringBuilder();
+                    tokens = add.split("\\.");
                     for (var elem : tokens) {
-                        if (elem.contains("-")) {
-                            var parts = elem.split("-");
-                            for (var part : parts) {
-                                if (part.matches("\\d*")) {
-                                    buf.append(Integer.toHexString(Integer.parseInt(part)));
-                                } else if (part.matches("[\\da-fA-F]")) {
-                                    buf.append(part);
-                                }
-                            }
-                        } else if (elem.matches("\\d*")) {
-                            buf.append(Integer.toHexString(Integer.parseInt(elem)));
-                        } else if (elem.matches("[\\da-fA-F]")) {
-                            buf.append(elem);
+                        if (elem.length() == 1) {
+                            buf.append("0");
                         }
+                        buf.append(Integer.toHexString(Integer.parseInt(elem)));
                     }
+                } else if (add.contains(":")) {
+                    tokens = add.split(":");
+                    for (var elem : tokens) {
+                        buf.append(elem);
+                    }
+                }
+                var i = 1;
+                if (add.contains(".")) {
+                    tokens = host.split("\\.");
                     for (var elem : tokens) {
                         var hex = buf.toString();
-                        if (elem.contains(hex)) {
-                            sb.append("cloak-");
+                        if (elem.contains(hex) && !hex.isBlank()) {
+                            sb.insert(0, "cloak-");
                             sb.append(parseHex(hex));
                             sb.append(".");
+                            buf.delete(0, buf.length());
                         } else if (elem.contains("-")) {
                             var parts = elem.split("-");
                             var j = 1;
                             for (var part : parts) {
                                 if (part.matches("\\d*")) {
                                     sb.append(parse(part));
-                                } else if (part.contains("dynamic")) {
-                                    sb.append("cloak-");
-                                } else if (part.contains("ip")) {
-                                    sb.append("cloak-");
+                                } else if (part.equals("dynamic") || part.equals("ip")) {
+                                    sb.insert(0, "cloak-");
                                 } else {
                                     sb.append(part);
                                     if (j < parts.length) {
@@ -94,10 +92,8 @@ public class Cloak {
                             sb.append(".");
                         } else if (elem.matches("\\d*")) {
                             sb.append(parse(elem));
-                        } else if (elem.contains("dynamic")) {
-                            sb.append("cloak-");
-                        } else if (elem.contains("ip")) {
-                            sb.append("cloak-");
+                        } else if (elem.equals("dynamic") || elem.equals("ip")) {
+                            sb.insert(0, "cloak-");
                         } else {
                             sb.append(elem);
                             if (i < tokens.length) {
