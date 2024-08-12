@@ -69,7 +69,9 @@ public class Cloak {
                     for (var elem : tokens) {
                         var hex = buf.toString();
                         if (elem.contains(hex) && !hex.isBlank()) {
-                            sb.insert(0, "cloak-");
+                            if (!sb.toString().startsWith("cloak-")) {
+                                sb.insert(0, "cloak-");
+                            }
                             sb.append(parseHex(hex));
                             sb.append(".");
                             buf.delete(0, buf.length());
@@ -79,8 +81,10 @@ public class Cloak {
                             for (var part : parts) {
                                 if (part.matches("\\d*")) {
                                     sb.append(parse(part));
-                                } else if (part.equals("dynamic") || part.equals("ip")) {
-                                    sb.insert(0, "cloak-");
+                                } else if (part.contains("dyn") || part.contains("ip")) {
+                                    if (!sb.toString().startsWith("cloak-")) {
+                                        sb.insert(0, "cloak-");
+                                    }
                                 } else {
                                     sb.append(part);
                                     if (j < parts.length) {
@@ -92,8 +96,10 @@ public class Cloak {
                             sb.append(".");
                         } else if (elem.matches("\\d*")) {
                             sb.append(parse(elem));
-                        } else if (elem.equals("dynamic") || elem.equals("ip")) {
-                            sb.insert(0, "cloak-");
+                        } else if (elem.contains("dyn") || elem.contains("ip")) {
+                            if (!sb.toString().startsWith("cloak-")) {
+                                sb.insert(0, "cloak-");
+                            }
                         } else {
                             sb.append(elem);
                             if (i < tokens.length) {
