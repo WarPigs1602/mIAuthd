@@ -7,7 +7,7 @@ Modify the config.json.<br>
 [snircd](https://github.com/quakenet/snircd) needs for [qwebirc](https://github.com/qwebirc/qwebirc) the iauth-fix-webirc.patch and the configure.patch file,<br>
 Go to the snircd sources directory, and enter<br>
 "wget https://raw.githubusercontent.com/WarPigs1602/snircd-patches/main/iauth-fix-webirc.patch",<br>
-then enter "git apply iauth-fix-webirc.patch" to fix the server with an IAuth bug and add the webchat feature,<br>
+then enter "git apply iauth-fix-webirc.patch" to fix the IAuth crash bug and add the webchat feature,<br>
 then enter "wget https://raw.githubusercontent.com/WarPigs1602/snircd-patches/main/configure.patch",
 then enter "git apply configure.patch" to fix the MAXCONNECTIONS issue.
 After that then enter "./configure", then "make" and "make install",<br>
