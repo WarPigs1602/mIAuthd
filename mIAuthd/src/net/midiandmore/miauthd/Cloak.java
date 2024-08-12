@@ -81,7 +81,7 @@ public class Cloak {
                             for (var part : parts) {
                                 if (part.matches("\\d*")) {
                                     sb.append(parse(part));
-                                } else if (part.contains("dyn") || part.contains("ip")) {
+                                } else if (part.contains("dyn") || part.contains("ip") || part.contains("dsl") || part.contains("nat")) {
                                     if (!sb.toString().startsWith("cloak-")) {
                                         sb.insert(0, "cloak-");
                                     } else {
@@ -98,7 +98,7 @@ public class Cloak {
                             sb.append(".");
                         } else if (elem.matches("\\d*")) {
                             sb.append(parse(elem));
-                        } else if (elem.contains("dyn") || elem.contains("ip")) {
+                        } else if (elem.contains("dyn") || elem.contains("ip") || elem.contains("dsl") || elem.contains("nat")) {
                             if (!sb.toString().startsWith("cloak-")) {
                                 sb.insert(0, "cloak-");
                             } else {
