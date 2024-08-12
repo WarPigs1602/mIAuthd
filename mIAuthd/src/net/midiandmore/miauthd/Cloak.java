@@ -84,6 +84,8 @@ public class Cloak {
                                 } else if (part.contains("dyn") || part.contains("ip")) {
                                     if (!sb.toString().startsWith("cloak-")) {
                                         sb.insert(0, "cloak-");
+                                    } else {
+                                        sb.append(part);
                                     }
                                 } else {
                                     sb.append(part);
@@ -99,6 +101,8 @@ public class Cloak {
                         } else if (elem.contains("dyn") || elem.contains("ip")) {
                             if (!sb.toString().startsWith("cloak-")) {
                                 sb.insert(0, "cloak-");
+                            } else {
+                                sb.append(elem);
                             }
                         } else {
                             sb.append(elem);
