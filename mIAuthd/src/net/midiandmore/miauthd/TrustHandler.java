@@ -10,8 +10,6 @@ import java.io.PrintWriter;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import static org.apache.commons.codec.digest.HmacAlgorithms.HMAC_MD5;
-import static org.apache.commons.codec.digest.HmacAlgorithms.HMAC_SHA_1;
-import static org.apache.commons.codec.digest.HmacAlgorithms.HMAC_SHA_256;
 import org.apache.commons.codec.digest.HmacUtils;
 
 /**

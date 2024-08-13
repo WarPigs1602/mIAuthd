@@ -3,13 +3,7 @@
  */
 package net.midiandmore.miauthd;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.HashMap;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * The mIAuthd class
@@ -50,7 +44,7 @@ public class MIAuthd {
      * @throws Exception
      */
     private void init(String[] args) {
-        setUser(new HashMap<String, Clients>());
+        setUser(new HashMap<>());
         setStartTime(System.currentTimeMillis() / 1000);
         setLastTime(System.currentTimeMillis() / 1000);
         var configFile = "config.json";
@@ -159,7 +153,7 @@ public class MIAuthd {
     /**
      * @param user the user to set
      */
-    public void setUser(HashMap user) {
+    public void setUser(HashMap<String, Clients> user) {
         this.user = user;
     }
 

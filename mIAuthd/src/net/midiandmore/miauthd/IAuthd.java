@@ -4,9 +4,6 @@
  */
 package net.midiandmore.miauthd;
 
-import java.util.Arrays;
-import java.util.regex.PatternSyntaxException;
-
 /**
  * Parses the IAuthd
  *

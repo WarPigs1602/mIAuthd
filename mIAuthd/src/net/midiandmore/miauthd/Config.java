@@ -5,7 +5,6 @@
 package net.midiandmore.miauthd;
 import jakarta.json.Json;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.Properties;
 
